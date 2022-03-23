@@ -34,7 +34,7 @@ const intern = async function (req, res) {
                 return res.status(400).send({ status: false, message: "email is required" })
                      }
 
-            if (!(/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/.test(email))) {
+            if (!(/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/.test(email.trim()))) {
 
                 return res.status(400).send({ status: false, message: 'Email should be a valid email address' })
             }
@@ -52,7 +52,11 @@ const intern = async function (req, res) {
 
                 return res.status(400).send({ status: false, message: `Mobile Number is not valid` })
             }
-
+            let duplicateMobile=await internModel.findOne({mobile});
+                if(duplicateMobile)
+                 {
+                  return res.status(400).send({status:false, msg: "Mobile is already in use"})
+                      }
         
               let collegeId = req.body.collegeId
               let college = await collegeModel.findById(collegeId)
